@@ -1,19 +1,14 @@
-FROM python:3.8-bullseye
+FROM python:3.11-bookwom
 
 WORKDIR /home/mlflow
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
+RUN apt-get install -y --no-install-recommends nodejs \
     # java
     openjdk-11-jre-headless \
+    # protobuf 
+     protobuf-compiler \
     # yarn
     && npm install --global yarn \
-    # protoc
-    && wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.4/protoc-3.19.4-linux-x86_64.zip -O /tmp/protoc.zip \
-    && mkdir -p /home/mlflow/.local \
-    && unzip /tmp/protoc.zip -d /home/mlflow/.local/protoc \
-    && rm /tmp/protoc.zip \
-    && chmod -R +x /home/mlflow/.local/protoc \
     # adding an unprivileged user
     && groupadd --gid 10001 mlflow  \
     && useradd --uid 10001 --gid mlflow --shell /bin/bash --create-home mlflow
